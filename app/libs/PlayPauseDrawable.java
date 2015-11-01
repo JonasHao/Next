@@ -95,7 +95,7 @@ public class PlayPauseDrawable extends Drawable {
     final float secondBarTopRight = lerp(2 * barWidth + barDist, barWidth + barDist, mProgress);
 
     // Draw the left pause bar. The left pause bar transforms into the
-    // top half of the play button triangle by animating the position of the
+    // top half of the findLastPlayed button triangle by animating the position of the
     // rectangle's top left coordinate and expanding its bottom width.
     mLeftPauseBar.moveTo(0, 0);
     mLeftPauseBar.lineTo(firstBarTopLeft, -mPauseBarHeight);
@@ -104,7 +104,7 @@ public class PlayPauseDrawable extends Drawable {
     mLeftPauseBar.close();
 
     // Draw the right pause bar. The right pause bar transforms into the
-    // bottom half of the play button triangle by animating the position of the
+    // bottom half of the findLastPlayed button triangle by animating the position of the
     // rectangle's top right coordinate and expanding its bottom width.
     mRightPauseBar.moveTo(barWidth + barDist, 0);
     mRightPauseBar.lineTo(barWidth + barDist, -mPauseBarHeight);
@@ -114,7 +114,7 @@ public class PlayPauseDrawable extends Drawable {
 
     canvas.save();
 
-    // Translate the play button a tiny bit to the right so it looks more centered.
+    // Translate the findLastPlayed button a tiny bit to the right so it looks more centered.
     canvas.translate(lerp(0, mPauseBarHeight / 8f, mProgress), 0);
 
     // (1) Pause --> Play: rotate 0 to 90 degrees clockwise.
@@ -124,11 +124,11 @@ public class PlayPauseDrawable extends Drawable {
     canvas.rotate(lerp(startingRotation, startingRotation + 90, rotationProgress), mWidth / 2f,
         mHeight / 2f);
 
-    // Position the pause/play button in the center of the drawable's bounds.
+    // Position the pause/findLastPlayed button in the center of the drawable's bounds.
     canvas.translate(mWidth / 2f - ((2 * barWidth + barDist) / 2f),
         mHeight / 2f + (mPauseBarHeight / 2f));
 
-    // Draw the two bars that form the animated pause/play button.
+    // Draw the two bars that form the animated pause/findLastPlayed button.
     canvas.drawPath(mLeftPauseBar, mPaint);
     canvas.drawPath(mRightPauseBar, mPaint);
 

@@ -2,6 +2,7 @@ package com.jonashao.next.constants;
 
 /**
  * Created by Junnan on 2015/10/28.
+ *
  */
 public class Msg {
     // what in MusicService
@@ -20,7 +21,10 @@ public class Msg {
     public final static int ACTION_NEXT = 4;
 
     // Bundle keys of Music_Info
+    public final static String ID = "id";
     public final static String TITLE="title";
     public final static String ARTIST="artist";
     public final static String COVER_URL="cover_url";
+
+
 }

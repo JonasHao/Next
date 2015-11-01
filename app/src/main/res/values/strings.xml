@@ -3,4 +3,9 @@
 
     <string name="song_name">Song</string>
     <string name="singer">Singer</string>
+    <string name="unknown_artist">unknown artist</string>
+
+    <!-- Toasts-->
+    <string name="no_music">No Music File Found In Your Phone!</string>
+
 </resources>

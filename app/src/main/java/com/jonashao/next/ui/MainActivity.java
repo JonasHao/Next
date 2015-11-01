@@ -1,23 +1,25 @@
 package com.jonashao.next.ui;
 
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.graphics.Palette;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jonashao.next.MusicService;
 import com.jonashao.next.R;
 import com.jonashao.next.constants.Msg;
+import com.jonashao.next.util.LogHelper;
 
 import java.lang.ref.WeakReference;
 
 import co.mobiwise.library.MusicPlayerView;
 
 public class MainActivity extends MusicBaseActivity implements View.OnClickListener {
+    private static final String TAG ="MainActivity";
     //Views
     MusicPlayerView mpv;
     ImageButton button_previous;
@@ -33,6 +35,11 @@ public class MainActivity extends MusicBaseActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
+
+        Intent intent = new Intent(MainActivity.this, MusicService.class);
+        startService(intent);
+        LogHelper.d(TAG, "service started");
+        BindService();
     }
 
     private void findViews() {
@@ -43,6 +50,11 @@ public class MainActivity extends MusicBaseActivity implements View.OnClickListe
         textView_title = (TextView)findViewById(R.id.textView_title);
         textView_artist =(TextView)findViewById(R.id.textView_artist);
         panel_back = (RelativeLayout)findViewById(R.id.background_panel);
+
+        mpv.setOnClickListener(this);
+        button_previous.setOnClickListener(this);
+        button_like.setOnClickListener(this);
+        button_next.setOnClickListener(this);
     }
 
     @Override
@@ -71,7 +83,7 @@ public class MainActivity extends MusicBaseActivity implements View.OnClickListe
     }
 
     @Override
-    Handler incomingHandler() {
+         Handler incomingHandler() {
         return new mainActivityHandler(this);
     }
 
@@ -89,6 +101,7 @@ public class MainActivity extends MusicBaseActivity implements View.OnClickListe
         @Override
         public void handleMessage(Message msg) {
             MainActivity activity = mWeakReference.get();
+            LogHelper.d(TAG,"receive: "+msg.what);
             switch (msg.what) {
                 case Msg.MSG_MUSIC_INFO:
                     Bundle musicInfo = msg.getData();
@@ -97,6 +110,7 @@ public class MainActivity extends MusicBaseActivity implements View.OnClickListe
                     String cover_url = musicInfo.getString(Msg.COVER_URL);
                     activity.setMusicDisplay(title,artist,cover_url);
                     break;
+
                 default:
                     super.handleMessage(msg);
             }

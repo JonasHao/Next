@@ -76,7 +76,7 @@ public class MusicPlayerView extends View implements OnPlayPauseToggleListener {
   private OnClickListener onClickListener;
 
   /**
-   * Button paint for play/pause control button
+   * Button paint for findLastPlayed/pause control button
    */
   private static Paint mPaintButton;
 
@@ -241,7 +241,7 @@ public class MusicPlayerView extends View implements OnPlayPauseToggleListener {
   private boolean mProgressVisibility = true;
 
   /**
-   * play pause animation duration
+   * findLastPlayed pause animation duration
    */
   private static final long PLAY_PAUSE_ANIMATION_DURATION = 200;
 
@@ -251,7 +251,7 @@ public class MusicPlayerView extends View implements OnPlayPauseToggleListener {
   private PlayPauseDrawable mPlayPauseDrawable;
 
   /**
-   * Animator set for play pause toggle
+   * Animator set for findLastPlayed pause toggle
    */
   private AnimatorSet mAnimatorSet;
 
@@ -377,7 +377,7 @@ public class MusicPlayerView extends View implements OnPlayPauseToggleListener {
     //button size is about to 1/4 of image size then we divide it to 8.
     mButtonRadius = mWidth / 8.0f;
 
-    //We resize play/pause drawable with button radius. button needs to be inside circle.
+    //We resize findLastPlayed/pause drawable with button radius. button needs to be inside circle.
     mPlayPauseDrawable.resize((1.2f * mButtonRadius / 5.0f), (3.0f * mButtonRadius / 5.0f) + 10.0f,
         (mButtonRadius / 5.0f));
 
@@ -404,7 +404,7 @@ public class MusicPlayerView extends View implements OnPlayPauseToggleListener {
     canvas.rotate(mRotateDegrees, mCenterX, mCenterY);
     canvas.drawCircle(mCenterX, mCenterY, radius, mPaintCover);
 
-    //Rotate back to make play/pause button stable(No turn)
+    //Rotate back to make findLastPlayed/pause button stable(No turn)
     canvas.rotate(-mRotateDegrees, mCenterX, mCenterY);
 
     //Draw Play/Pause button
@@ -590,7 +590,7 @@ public class MusicPlayerView extends View implements OnPlayPauseToggleListener {
 
   /**
    * This is detect when mButtonRegion is clicked. Which means
-   * play/pause action happened.
+   * findLastPlayed/pause action happened.
    */
   @Override public boolean onTouchEvent(MotionEvent event) {
 
@@ -772,7 +772,7 @@ public class MusicPlayerView extends View implements OnPlayPauseToggleListener {
   }
 
   /**
-   * Animate play/pause image
+   * Animate findLastPlayed/pause image
    */
   public void toggle() {
     if (mAnimatorSet != null) {

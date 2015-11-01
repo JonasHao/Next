@@ -41,13 +41,19 @@ public class LogHelper {
 
     public static void e(String tag, String message,Throwable tr ){
         if(logLevel>ERROR){
-            Log.e(tag, message,tr);
+            Log.e(tag, message, tr);
         }
     }
 
     public static void e(String tag, Throwable tr){
         if(logLevel>ERROR){
             Log.e(tag,tr.toString());
+        }
+    }
+
+    public static void d(String tag, String message){
+        if(logLevel>DEBUG){
+            Log.d(tag,message.toString());
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -16,6 +17,8 @@ import com.jonashao.next.MusicService;
 import com.jonashao.next.constants.Msg;
 import com.jonashao.next.util.LogHelper;
 
+import java.lang.ref.WeakReference;
+
 
 /**
  * Created by Junnan on 2015/10/28.
@@ -25,6 +28,11 @@ public abstract class MusicBaseActivity extends AppCompatActivity {
     private static final String TAG = "MusicBase";
     Messenger mServiceMessenger;
     boolean mBounded;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     abstract Handler incomingHandler();
 
@@ -37,14 +45,11 @@ public abstract class MusicBaseActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             mServiceMessenger = new Messenger(service);
             mBounded = true;
-            try {
-                Message msg = Message.obtain(null, Msg.MSG_REGISTER);
-                msg.replyTo = mServiceMessenger;
-                msg.arg1 = getActivityCode();
-                mServiceMessenger.send(msg);
-            } catch (RemoteException e) {
-                LogHelper.e(TAG, e);
-            }
+
+            Message msg = Message.obtain(null, Msg.MSG_REGISTER);
+            msg.replyTo = mMessenger;
+            msg.arg1 = getActivityCode();
+            sendToService(msg);
         }
 
         @Override
@@ -63,14 +68,14 @@ public abstract class MusicBaseActivity extends AppCompatActivity {
         }
     }
 
-    public void sendToService(int what, int arg1){
-        Message msg = Message.obtain(null,what);
+    public void sendToService(int what, int arg1) {
+        Message msg = Message.obtain(null, what);
         msg.arg1 = arg1;
         sendToService(msg);
     }
 
-    public void sendToService(int what, int arg1, int arg2){
-        Message msg = Message.obtain(null,what);
+    public void sendToService(int what, int arg1, int arg2) {
+        Message msg = Message.obtain(null, what);
         msg.arg1 = arg1;
         msg.arg2 = arg2;
         sendToService(msg);
@@ -90,5 +95,6 @@ public abstract class MusicBaseActivity extends AppCompatActivity {
             Log.e(TAG, "mBTService is null");
         }
     }
+
 
 }
