@@ -8,12 +8,17 @@ public class MusicFeatures {
     private MusicInfo mMusicInfo;
     private String album;
     private int year;
-    private long duration;
+
     private String genre;
 
     public static long generatID() {
         // TODO: auto generate
         return 0;
+    }
+
+    public MusicFeatures(long id, String title, String artist, int duration){
+        this.mMusicInfo =  new MusicInfo(id, title, artist);
+        mMusicInfo.setDuration(duration);
     }
 
     public MusicFeatures(long id, String title, String artist) {
@@ -26,14 +31,6 @@ public class MusicFeatures {
 
     public void setAlbum(String album) {
         this.album = album;
-    }
-
-    public long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(long duration) {
-        this.duration = duration;
     }
 
     public int getYear() {

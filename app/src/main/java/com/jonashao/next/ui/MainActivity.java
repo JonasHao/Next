@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -108,7 +109,10 @@ public class MainActivity extends MusicBaseActivity implements View.OnClickListe
                     String title = musicInfo.getString(Msg.TITLE);
                     String artist = musicInfo.getString(Msg.ARTIST);
                     String cover_url = musicInfo.getString(Msg.COVER_URL);
+                    int duration = musicInfo.getInt(Msg.DURATION);
+                    LogHelper.d(TAG,"duration "+ duration);
                     activity.setMusicDisplay(title,artist,cover_url);
+                    activity.mpv.setMax(duration/1000);
                     break;
 
                 default:

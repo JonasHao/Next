@@ -7,5 +7,6 @@
 
     <!-- Toasts-->
     <string name="no_music">No Music File Found In Your Phone!</string>
+    <string name="query_music_failed">Failed to query music from database</string>
 
 </resources>

@@ -56,16 +56,15 @@ public class MusicProvider {
                 String thisTitle = cursor.getString(titleColumn);
                 String thisArtist = cursor.getString(artistColumn);
                 String thisAlbum = cursor.getString(albumColumn);
-                long thisDuration = cursor.getLong(durationColumn);
+                int thisDuration = cursor.getInt(durationColumn);
                 int thisYear = cursor.getInt(yearColumn);
 
                 if(thisArtist.equals("<unknown>")){
                     thisArtist = mContext.getString(R.string.unknown_artist);
                 }
 
-                MusicFeatures musicFeatures = new MusicFeatures(thisId,thisTitle,thisArtist);
+                MusicFeatures musicFeatures = new MusicFeatures(thisId,thisTitle,thisArtist,thisDuration);
                 musicFeatures.setAlbum(thisAlbum);
-                musicFeatures.setDuration(thisDuration);
                 musicFeatures.setYear(thisYear);
 
                 NextDB.addOrUpdateMusic(musicFeatures);

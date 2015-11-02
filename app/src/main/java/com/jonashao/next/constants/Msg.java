@@ -25,6 +25,7 @@ public class Msg {
     public final static String TITLE="title";
     public final static String ARTIST="artist";
     public final static String COVER_URL="cover_url";
+    public final static String DURATION="duration";
 
 
 }

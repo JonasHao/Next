@@ -5,18 +5,10 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Messenger;
 import android.os.PowerManager;
-import android.os.RemoteException;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.jonashao.next.constants.Msg;
 import com.jonashao.next.data.DBOpenHelper;
-import com.jonashao.next.data.MusicInfo;
 
 import java.io.IOException;
 
@@ -27,6 +19,9 @@ import java.io.IOException;
 public class PlayerHelper implements AudioManager.OnAudioFocusChangeListener,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener {
+    public enum State{IDLE, START, PAUSE, STOP}
+    State mState;
+
     private static final String TAG = "PlayerHelper";
     MediaPlayer mMediaPlayer;
     DBOpenHelper musicDB;
@@ -37,16 +32,19 @@ public class PlayerHelper implements AudioManager.OnAudioFocusChangeListener,
         this.context = context;
         initMediaPlayer();
         musicDB = DBOpenHelper.getInstance(context);
+        mState = State.IDLE;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
+        switchState(State.START);
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         LogHelper.e(TAG, "error when prepare play");
+        switchState(State.STOP);
         release();
         initMediaPlayer();
         return false;
@@ -54,6 +52,7 @@ public class PlayerHelper implements AudioManager.OnAudioFocusChangeListener,
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+        switchState(State.STOP);
         LogHelper.i("Completion Listener", "Song Complete");
         mp.stop();
         mp.reset();
@@ -119,6 +118,7 @@ public class PlayerHelper implements AudioManager.OnAudioFocusChangeListener,
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
             mMediaPlayer = null;
+            switchState(State.STOP);
         }
     }
 
@@ -126,8 +126,18 @@ public class PlayerHelper implements AudioManager.OnAudioFocusChangeListener,
         return musicDB.findLastPlayed();
     }
 
-    public void play() {
-        mMediaPlayer.start();
+    public boolean play() {
+        switch (mState){
+            case IDLE:
+                return false;
+            case START:
+            case PAUSE:
+                mMediaPlayer.start();
+                switchState(State.START);
+                return true;
+            default:
+                return false;
+        }
     }
 
     public void play(long id) {
@@ -151,17 +161,61 @@ public class PlayerHelper implements AudioManager.OnAudioFocusChangeListener,
     }
 
     public void previous() {
-
+        long id = findLastPlayed();
+        play(id);
     }
 
     public void like() {
-
+        Toast.makeText(context,"还没做好o",Toast.LENGTH_SHORT).show();
     }
 
     public void next() {
-        LogHelper.d(TAG,"NEXT");
-
+        Toast.makeText(context,"还没做好o",Toast.LENGTH_SHORT).show();
     }
 
+    private boolean switchState(State state){
+        switch (state){
+            case IDLE:
+                if(mState == State.STOP) {
+                    mState = State.IDLE;
+                    return true;
+                }
+                break;
+            case START:
+                switch (mState){
+                    case IDLE:
+                    case START:
+                    case PAUSE:
+                        mState = State.START;
+                        return true;
+                }
+                break;
+            case PAUSE:
+                if(mState == State.START) {
+                    mState = State.START;
+                    return true;
+                }
+                break;
+            case STOP:
+                switch (mState){
+                    case IDLE:
+                        break;
+                    case START:
+                    case PAUSE:
+                        mState = State.STOP;
+                        return true;
+                }
+                break;
+        }
+        return false;
+    }
+
+    public final State getState(){
+        return mState;
+    }
+
+    public boolean justPlayed(long id){
+        return false;
+    }
 
 }

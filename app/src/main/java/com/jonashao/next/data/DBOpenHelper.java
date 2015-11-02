@@ -52,7 +52,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + MUSIC_INFO_TABLE_NAME + " (" +
                     KEY_ID + " INTEGER PRIMARY KEY , " +
                     KEY_TITLE + " TEXT, " +
-                    KEY_ARTIST + " TEXT); ";
+                    KEY_ARTIST + " TEXT," +
+                    KEY_DURATION + " INTEGER); ";
 
     private static final String MUSIC_FEATURES_TABLE_CREATE =
             "CREATE TABLE " + MUSIC_FEATURES_TABLE_NAME + " (" +
@@ -60,8 +61,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     KEY_ARTIST + " TEXT, " +
                     KEY_ALBUM + " TEXT, " +
                     KEY_YEAR + " INTEGER, " +
-                    KEY_DURATION + " INTEGER, " +
-                    KEY_GENRE + " GENRE); ";
+                    KEY_GENRE + " TEXT); ";
 
     private static final String MUSIC_NODE_TABLE_CREATE =
             "CREATE TABLE " + MUSIC_NODE_TABLE_NAME + " (" +
@@ -142,13 +142,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             info.put(KEY_ID, musicID);
             info.put(KEY_TITLE, musicInfo.getTitle());
             info.put(KEY_ARTIST, musicInfo.getArtist());
+            info.put(KEY_DURATION, musicInfo.getDuration());
 
             ContentValues features = new ContentValues();
             features.put(KEY_ID, musicID);
             features.put(KEY_ARTIST, musicInfo.getArtist());
             features.put(KEY_ALBUM, music.getAlbum());
             features.put(KEY_YEAR, music.getYear());
-            features.put(KEY_DURATION, music.getDuration());
             features.put(KEY_GENRE, music.getGenre());
 
             // First try to update the music in case the music already exists in the database
@@ -227,16 +227,21 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                 LogHelper.d(TAG, "没查到大海的歌曲，将去扫描一遍曲库");
                 MusicProvider provider = MusicProvider.getInstance(context);
                 provider.scanMusic();
+                cursor = db.rawQuery(MUSIC_SEE_QUERY, null);
+                count = cursor.getCount();
             }
-            // Generate a random number as the row number
-            Random rand = new Random();
-            int row = rand.nextInt(count);
-            // get the id of that row
-            if (cursor.moveToPosition(row)) {
-                id = cursor.getLong(cursor.getColumnIndex(KEY_ID));
+            if (count > 0) {
+                // Generate a random number as the row number
+                Random rand = new Random();
+                int row = rand.nextInt(count);
+                // get the id of that row
+                if (cursor.moveToPosition(row)) {
+                    id = cursor.getLong(cursor.getColumnIndex(KEY_ID));
+                }
             }
+
         } catch (Exception e) {
-            LogHelper.d(TAG, "从数据库随机获取歌曲失败");
+            LogHelper.e(TAG, "从数据库随机获取歌曲失败", e);
         } finally {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
@@ -259,10 +264,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 String title = cursor.getString(cursor.getColumnIndex(KEY_TITLE));
                 String artist = cursor.getString(cursor.getColumnIndex(KEY_ARTIST));
+                int duration = cursor.getInt(cursor.getColumnIndex(KEY_DURATION));
+                LogHelper.d(TAG,"duration: "+duration +" column: "+cursor.getColumnIndex(KEY_DURATION));
                 musicInfo = new MusicInfo(ID, title, artist);
+                musicInfo.setDuration(duration);
             }
         } catch (Exception e) {
-            LogHelper.d(TAG, "从数据库获取歌曲失败");
+            LogHelper.e(TAG, "从数据库获取歌曲失败", e);
         } finally {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();

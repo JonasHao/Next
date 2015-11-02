@@ -10,6 +10,7 @@ public class MusicInfo {
     private String title;
     private String artist;
     private String coverUrl;
+    private int duration;
 
     MusicInfo(long ID, String title, String artist) {
         setID(ID);
@@ -47,5 +48,13 @@ public class MusicInfo {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 }

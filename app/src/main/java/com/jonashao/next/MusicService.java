@@ -84,21 +84,29 @@ public class MusicService extends Service {
                 case Msg.MSG_ACTION:
                     switch (msg.arg1) {
                         case Msg.ACTION_PLAY:
-                            service.mPlayerHelper.play();
-                            long id = service.mPlayerHelper.findLastPlayed();
-                            DBOpenHelper musicDB = DBOpenHelper.getInstance(service.getApplicationContext());
-                            MusicInfo musicInfo = musicDB.queryMusicInfoByID(id);
-                            Message message = Message.obtain(null, Msg.MSG_MUSIC_INFO);
-                            Bundle inf = new Bundle();
-                            inf.putString(Msg.TITLE, musicInfo.getTitle());
-                            inf.putString(Msg.ARTIST, musicInfo.getArtist());
-                            inf.putLong(Msg.ID, musicInfo.getID());
-                            message.setData(inf);
-                            service.sendToTarget(message);
-                            if (id > 0) {
-                                service.mPlayerHelper.play(id);
-                            } else {
-                                LogHelper.e(TAG, "没有找到可以播放的歌曲");
+                            if (! service.mPlayerHelper.play()) {
+                                // the previous state of mediaPlayer was not PAUSE
+                                long id = service.mPlayerHelper.findLastPlayed();
+                                DBOpenHelper musicDB = DBOpenHelper.getInstance(service.getApplicationContext());
+                                LogHelper.d(TAG,"To query with id:"+id);
+                                MusicInfo musicInfo = musicDB.queryMusicInfoByID(id);
+                                if(musicInfo == null){
+                                    Toast.makeText(service, service.getString(R.string.query_music_failed),Toast.LENGTH_SHORT).show();
+                                    break;
+                                }
+                                Message message = Message.obtain(null, Msg.MSG_MUSIC_INFO);
+                                Bundle inf = new Bundle();
+                                inf.putString(Msg.TITLE, musicInfo.getTitle());
+                                inf.putString(Msg.ARTIST, musicInfo.getArtist());
+                                inf.putLong(Msg.ID, musicInfo.getID());
+                                inf.putInt(Msg.DURATION, musicInfo.getDuration());
+                                message.setData(inf);
+                                service.sendToTarget(message);
+                                if (id > 0) {
+                                    service.mPlayerHelper.play(id);
+                                } else {
+                                    LogHelper.e(TAG, "没有找到可以播放的歌曲");
+                                }
                             }
                             break;
                         case Msg.ACTION_PAUSE:
