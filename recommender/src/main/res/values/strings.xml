@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Next</string>
+    <string name="unknown_artist">未知</string>
+    <string name="no_permission">扫描音乐请求读取磁盘权限</string>
+
+    <string name="scan_music_title">正在扫描音乐</string>
+    <string name="scan_cover">正在匹配专辑封面</string>
+</resources>

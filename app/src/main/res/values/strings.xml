@@ -1,12 +1,4 @@
 <resources>
     <string name="app_name">Next</string>
-
-    <string name="song_name">Song</string>
-    <string name="singer">Singer</string>
-    <string name="unknown_artist">unknown artist</string>
-
-    <!-- Toasts-->
-    <string name="no_music">No Music File Found In Your Phone!</string>
-    <string name="query_music_failed">Failed to query music from database</string>
-
+    <string name="artist">Artist</string>
 </resources>

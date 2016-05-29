@@ -6,4 +6,8 @@
 
     <color name="colorProgressLoaded">#00815E</color>
     <color name="colorProgressEmpty">#20FFFFFF</color>
+
+    <color name="colorTextPrimary">#fff</color>
+    <color name="colorTextSecond">#90ffffff</color>
+
 </resources>
